@@ -1,47 +1,12 @@
-// Must match the indent used by matTreeNodePadding (default 40px).
 :host {
-  --tree-indent: 40px;
   --tree-guide-color: var(--mat-sys-outline-variant, #c4c7c5);
-  --tree-guide-width: 1px;
+  --mat-tree-node-min-height: 32px;
+  // Compact toggle / spacer buttons so text sits close to the guides.
+  --mat-icon-button-state-layer-size: 24px;
+  --mat-icon-button-icon-size: 24px;
 }
 
 mat-tree-node {
-  // One 1px vertical line per ancestor level, centered in each indent column
-  // (under the parent's toggle button). Only the padding area is painted:
-  // background-size limits it to --tree-level * indent.
-  --guide-center: calc(var(--tree-indent) / 2);
-  background-image:
-    // elbow: horizontal stub from the parent's guide to this node's toggle
-    linear-gradient(var(--tree-guide-color), var(--tree-guide-color)),
-    // vertical guides, one per level
-    repeating-linear-gradient(
-      to right,
-      transparent 0 calc(var(--guide-center) - var(--tree-guide-width) / 2),
-      var(--tree-guide-color) calc(var(--guide-center) - var(--tree-guide-width) / 2)
-        calc(var(--guide-center) + var(--tree-guide-width) / 2),
-      transparent calc(var(--guide-center) + var(--tree-guide-width) / 2) var(--tree-indent)
-    );
+  // Guide layers (vertical lines + elbow) are supplied per node by the component.
   background-repeat: no-repeat;
-  background-size:
-    calc(var(--tree-indent) / 2) var(--tree-guide-width),
-    calc(var(--tree-level, 0) * var(--tree-indent)) 100%;
-  background-position:
-    calc((var(--tree-level, 0) - 1) * var(--tree-indent) + var(--guide-center)) 50%,
-    left top;
-}
-
-// RTL: mirror the gradient direction and anchor to the right edge.
-:host-context([dir='rtl']) mat-tree-node {
-  background-image:
-    linear-gradient(var(--tree-guide-color), var(--tree-guide-color)),
-    repeating-linear-gradient(
-      to left,
-      transparent 0 calc(var(--guide-center) - var(--tree-guide-width) / 2),
-      var(--tree-guide-color) calc(var(--guide-center) - var(--tree-guide-width) / 2)
-        calc(var(--guide-center) + var(--tree-guide-width) / 2),
-      transparent calc(var(--guide-center) + var(--tree-guide-width) / 2) var(--tree-indent)
-    );
-  background-position:
-    right calc((var(--tree-level, 0) - 1) * var(--tree-indent) + var(--guide-center)) top 50%,
-    right top;
 }
