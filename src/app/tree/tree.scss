@@ -1,0 +1,12 @@
+:host {
+  --tree-guide-color: var(--mat-sys-outline-variant, #c4c7c5);
+  --mat-tree-node-min-height: 32px;
+  // Compact toggle / spacer buttons so text sits close to the guides.
+  --mat-icon-button-state-layer-size: 24px;
+  --mat-icon-button-icon-size: 24px;
+}
+
+mat-tree-node {
+  // Guide layers (vertical lines + elbow) are supplied per node by the component.
+  background-repeat: no-repeat;
+}
