@@ -46,7 +46,7 @@ export class Tree {
     // Root nodes have no guides; their children start the first guide column.
     this.dataSource.forEach((root) => {
       if (root.children?.length) {
-        walk(root.children, [false]);
+        walk(root.children, []);
       }
     });
     return result;
@@ -73,9 +73,10 @@ const LINE = 'linear-gradient(var(--tree-guide-color), var(--tree-guide-color))'
 
 /**
  * Builds the background layers for one node.
- * `continuing[k]` says whether the guide in column k runs through this row (its ancestor has
- * later siblings). The last entry is the node's own column: a full line when more siblings
- * follow, or a line stopping at the elbow when this is the last sibling.
+ * `continuing[k]` says whether the guide in ancestor column k runs through this row (the
+ * ancestor at that level has later siblings). The node's own column is `continuing.length`:
+ * a full line when more siblings follow, or a line stopping at the elbow when this is the
+ * last sibling.
  */
 function buildGuide(
   continuing: boolean[],
@@ -84,12 +85,12 @@ function buildGuide(
   rtl: boolean,
 ): GuideStyle {
   const layers: {w: string; h: string; x: number; y: string}[] = [];
-  continuing.slice(0, -1).forEach((through, k) => {
+  continuing.forEach((through, k) => {
     if (through) {
       layers.push({w: '1px', h: '100%', x: k * INDENT + INDENT / 2, y: 'top'});
     }
   });
-  const x = (continuing.length - 1) * INDENT + INDENT / 2;
+  const x = continuing.length * INDENT + INDENT / 2;
   layers.push({w: '1px', h: isLast ? '50%' : '100%', x, y: 'top'});
   // Elbow: leaves also span the spacer button so the line reaches the text.
   const elbowWidth = isLeaf ? INDENT - 4 + INDENT / 2 : INDENT / 2;
