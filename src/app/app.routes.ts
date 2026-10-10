@@ -1,7 +1,7 @@
 import { Routes } from '@angular/router';
-import { Tree } from './tree/tree';
+import { Galleri } from './galleri/galleri';
 
 export const routes: Routes = [
-  { path: 'tree', component: Tree },
-  { path: '', redirectTo: '/tree', pathMatch: 'full' }
+  { path: 'galleri', component: Galleri },
+  { path: '', redirectTo: '/galleri', pathMatch: 'full' }
 ];
