@@ -1,0 +1,47 @@
+:host {
+  --tree-indent: 24px;
+  --tree-guide-color: var(--mat-sys-outline-variant, #c4c7c5);
+  --mat-tree-node-min-height: 32px;
+  // Compact toggle / spacer buttons so text sits close to the guides.
+  --mat-icon-button-state-layer-size: 24px;
+  --mat-icon-button-icon-size: 24px;
+}
+
+mat-tree-node {
+  position: relative;
+  --guide-sign: 1;
+
+  // ::before paints the full-height vertical lines (ancestors that continue past this row, and
+  // this node's own column when more siblings follow) as box-shadow copies of a 1px box.
+  // ::after paints the elbow: half-height vertical stub plus the horizontal connector.
+  // Both are hidden (display: none) on root nodes, which get no --guide-display.
+  &::before,
+  &::after {
+    content: '';
+    display: var(--guide-display, none);
+    position: absolute;
+    pointer-events: none;
+  }
+
+  &::before {
+    inset-block: 0;
+    inset-inline-start: 0;
+    width: 1px;
+    box-shadow: var(--guide-shadows, none);
+  }
+
+  &::after {
+    top: 0;
+    height: 50%;
+    inset-inline-start: calc(var(--guide-col, 0) * var(--tree-indent) + var(--tree-indent) / 2 - 0.5px);
+    width: var(--guide-elbow, 0);
+    border-inline-start: 1px solid var(--tree-guide-color);
+    border-block-end: 1px solid var(--tree-guide-color);
+    box-sizing: border-box;
+  }
+}
+
+// RTL: shadow offsets are physical, so flip their sign.
+:host-context([dir='rtl']) mat-tree-node {
+  --guide-sign: -1;
+}
