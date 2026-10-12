@@ -1,16 +1,8 @@
-import {Component} from '@angular/core';
-import {MatTreeModule} from '@angular/material/tree';
+import {Component, inject, OnInit, signal, viewChild} from '@angular/core';
+import {MatTree, MatTreeModule} from '@angular/material/tree';
 import {MatIconModule} from '@angular/material/icon';
 import {MatButtonModule} from '@angular/material/button';
-
-/**
- * Food data with nested structure.
- * Each node has a name and an optional list of children.
- */
-interface FoodNode {
-  name: string;
-  children?: FoodNode[];
-}
+import { DataService, FoodNode } from '../data.service';
 
 /**
  * @title Tree with flat nodes (childrenAccessor)
@@ -21,17 +13,28 @@ interface FoodNode {
   templateUrl: './tree-custom.html',
   imports: [MatTreeModule, MatButtonModule, MatIconModule],
 })
-export class TreeCustom {
-  dataSource = EXAMPLE_DATA;
+export class TreeCustom implements OnInit {
+  private readonly dataService = inject(DataService);
+  private readonly tree = viewChild<MatTree<FoodNode>>('tree');
+
+  dataSource = signal<FoodNode[]>([]);
 
   /** Indent per level in px; must match --tree-indent in tree-custom.scss. */
   readonly indent = INDENT;
 
-  private readonly guides = buildGuides(EXAMPLE_DATA);
+  private guides: Map<FoodNode, Record<string, string>> | undefined;
+
+  ngOnInit() {
+    this.dataService.getTreeData().subscribe(data => {
+      this.dataSource.set(data);
+      this.guides = buildGuides(data);
+      this.tree()?.expandAll();
+    })
+  }
 
   /** CSS custom properties consumed by the ::before / ::after guide pseudo-elements. */
   guide(node: FoodNode): Record<string, string> {
-    return this.guides.get(node) ?? {};
+    return this.guides?.get(node) ?? {};
   }
 
   childrenAccessor = (node: FoodNode) => node.children ?? [];
@@ -81,24 +84,3 @@ function buildGuides(roots: FoodNode[]): Map<FoodNode, Record<string, string>> {
   roots.forEach((root) => walk(root.children ?? [], []));
   return result;
 }
-
-const EXAMPLE_DATA: FoodNode[] = [
-  {
-    name: 'Fruit',
-    children: [{name: 'Apple'}, {name: 'Banana'}, {name: 'Fruit loops'}],
-  },
-  {
-    name: 'Vegetables',
-    children: [
-      {
-        name: 'Green',
-        children: [{name: 'Broccoli'}, {name: 'Brussels sprouts'}],
-      },
-      {
-        name: 'Orange',
-        children: [{name: 'Pumpkins'}, {name: 'Carrots'}],
-      },
-    ],
-  },
-];
-
