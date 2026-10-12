@@ -1,4 +1,4 @@
-import {Component, inject, OnInit, signal, viewChild} from '@angular/core';
+import {afterNextRender, Component, inject, Injector, OnInit, signal, viewChild} from '@angular/core';
 import {MatTree, MatTreeModule} from '@angular/material/tree';
 import {MatIconModule} from '@angular/material/icon';
 import {MatButtonModule} from '@angular/material/button';
@@ -15,6 +15,7 @@ import { DataService, FoodNode } from '../data.service';
 })
 export class TreeCustom implements OnInit {
   private readonly dataService = inject(DataService);
+  private readonly injector = inject(Injector);
   private readonly tree = viewChild<MatTree<FoodNode>>('tree');
 
   dataSource = signal<FoodNode[]>([]);
@@ -28,7 +29,8 @@ export class TreeCustom implements OnInit {
     this.dataService.getTreeData().subscribe(data => {
       this.dataSource.set(data);
       this.guides = buildGuides(data);
-      this.tree()?.expandAll();
+      // The tree only learns about its nodes once it renders the new data.
+      afterNextRender(() => this.tree()?.expandAll(), {injector: this.injector});
     })
   }
 
