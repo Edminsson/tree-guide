@@ -26,11 +26,24 @@ export class TreeCustom implements OnInit {
   private guides: Map<FoodNode, Record<string, string>> | undefined;
 
   ngOnInit() {
-    this.dataService.getTreeData().subscribe(data => {
-      this.dataSource.set(data);
-      this.guides = buildGuides(data);
-      // The tree only learns about its nodes once it renders the new data.
-      afterNextRender(() => this.tree()?.expandAll(), {injector: this.injector});
+    this.loadData();
+  }
+
+  reloadData() {
+    this.loadData(true);
+  }
+
+  loadData(isReload: boolean = false) {
+      this.dataService.getTreeData().subscribe(data => {
+      if (isReload) {
+        data[0].name = 'Reloaded Fruit';
+        data[1]!.children![0].name = 'Verde';
+        this.dataSource.set(data);
+      } else {
+        this.dataSource.set(data);
+        this.guides = buildGuides(data);
+        afterNextRender(() => this.tree()?.expandAll(), {injector: this.injector});
+      }
     })
   }
 
