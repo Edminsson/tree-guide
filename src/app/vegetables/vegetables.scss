@@ -1,5 +1,26 @@
+// Fill the viewport: the heading takes its natural height and the container gets the rest.
+:host {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    overflow: hidden;
+}
+
+h1 {
+    flex: none;
+}
+
 .container {
     display: grid;
     grid-template-columns: 300px 1fr;
+    grid-template-rows: minmax(0, 1fr);
     gap: 20px;
+    flex: 1;
+    min-height: 0;
+}
+
+app-tree-custom {
+    display: block;
+    min-height: 0;
+    overflow-y: auto;
 }
