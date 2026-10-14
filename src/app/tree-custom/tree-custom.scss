@@ -45,3 +45,8 @@ mat-tree-node {
 :host-context([dir='rtl']) mat-tree-node {
   --guide-sign: -1;
 }
+
+mat-tree-node.selected {
+  background-color: var(--mat-sys-secondary-container);
+  color: var(--mat-sys-on-secondary-container);
+}

@@ -1,4 +1,14 @@
-import {afterNextRender, Component, inject, Injector, OnInit, signal, viewChild} from '@angular/core';
+import {
+  afterNextRender,
+  Component,
+  computed,
+  ElementRef,
+  inject,
+  Injector,
+  OnInit,
+  signal,
+  viewChild,
+} from '@angular/core';
 import {MatTree, MatTreeModule} from '@angular/material/tree';
 import {MatIconModule} from '@angular/material/icon';
 import {MatButtonModule} from '@angular/material/button';
@@ -16,9 +26,20 @@ import { DataService, FoodNode } from '../data.service';
 export class TreeCustom implements OnInit {
   private readonly dataService = inject(DataService);
   private readonly injector = inject(Injector);
+  private readonly host = inject<ElementRef<HTMLElement>>(ElementRef);
   private readonly tree = viewChild<MatTree<FoodNode>>('tree');
 
   dataSource = signal<FoodNode[]>([]);
+
+  /** Every node in the tree, depth first, with the chain of ancestors leading to it. */
+  readonly items = computed(() => flatten(this.dataSource()));
+
+  /** The node last revealed through {@link reveal}; rendered highlighted. */
+  readonly selected = signal<FoodNode | undefined>(undefined);
+
+  private readonly nodeIds = computed(
+    () => new Map(this.items().map((item, i) => [item.node, i] as const)),
+  );
 
   /** Indent per level in px; must match --tree-indent in tree-custom.scss. */
   readonly indent = INDENT;
@@ -52,12 +73,46 @@ export class TreeCustom implements OnInit {
     return this.guides?.get(node) ?? {};
   }
 
+  /** Expands the ancestors of `item`, highlights it and scrolls it into view. */
+  reveal(item: TreeItem) {
+    const tree = this.tree();
+    item.ancestors.forEach((ancestor) => tree?.expand(ancestor));
+    this.selected.set(item.node);
+    afterNextRender(
+      () => {
+        const id = this.nodeIds().get(item.node);
+        this.host.nativeElement
+          .querySelector(`[data-node-id="${id}"]`)
+          ?.scrollIntoView({block: 'nearest'});
+      },
+      {injector: this.injector},
+    );
+  }
+
+  nodeId(node: FoodNode): number | undefined {
+    return this.nodeIds().get(node);
+  }
+
   childrenAccessor = (node: FoodNode) => node.children ?? [];
 
   hasChild = (_: number, node: FoodNode) => !!node.children && node.children.length > 0;
 }
 
 const INDENT = 24;
+
+export interface TreeItem {
+  node: FoodNode;
+  ancestors: FoodNode[];
+  /** Full path, e.g. "Vegetables › Orange", to tell apart nodes that share a name. */
+  label: string;
+}
+
+function flatten(nodes: FoodNode[], ancestors: FoodNode[] = []): TreeItem[] {
+  return nodes.flatMap((node) => [
+    {node, ancestors, label: [...ancestors, node].map((n) => n.name).join(' › ')},
+    ...flatten(node.children ?? [], [...ancestors, node]),
+  ]);
+}
 
 /** Offset (in CSS) of the vertical line in column `k`, flipped in RTL via `--guide-sign`. */
 const columnOffset = (k: number) =>

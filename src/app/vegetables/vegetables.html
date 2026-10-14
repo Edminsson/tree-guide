@@ -2,5 +2,15 @@
 <h1>Vegetables</h1>
 <div class="container">
     <app-tree-custom></app-tree-custom>
-    <div class="right-panel">This is the right panel.</div>
+    <div class="right-panel">
+        <mat-form-field>
+            <mat-label>Search the tree</mat-label>
+            <input matInput type="text" [matAutocomplete]="auto" [value]="query()" (input)="onInput($event)">
+            <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayItem" (optionSelected)="onSelected($event)">
+                @for (item of matches(); track item.node) {
+                    <mat-option [value]="item">{{ item.label }}</mat-option>
+                }
+            </mat-autocomplete>
+        </mat-form-field>
+    </div>
 </div>
