@@ -4,9 +4,11 @@ import { TreeDefault } from '../tree-default/tree-default';
 import { TreeCustom } from '../tree-custom/tree-custom';
 import { RouterLink } from '@angular/router';
 import { MatButton } from '@angular/material/button';
+import { Header } from '../header/header';
 
 @Component({
   imports: [
+    Header,
     Tree,
     TreeCustom,
     TreeDefault,

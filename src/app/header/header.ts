@@ -8,6 +8,8 @@ import { RouterLink } from '@angular/router';
     <header>
       <span class="title">Simple Material2</span>
       <button class="knappfarger" mat-button routerLink="/galleri">Galleri</button>
+      <button class="knappfarger" mat-button routerLink="/sticky">Sticky</button>
+      <button class="knappfarger" mat-button routerLink="/vegetables">Vegetables</button>
     </header>`,
   styles: `
     :host {
