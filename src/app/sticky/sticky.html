@@ -6,7 +6,8 @@
   <mat-tab label="First">
     <div class="container">
       <div class="left">
-        <app-tree-custom></app-tree-custom>
+        <app-tree-search [tree]="tree"></app-tree-search>
+        <app-tree-custom #tree></app-tree-custom>
       </div>
       <div class="right">
         <app-right-panel></app-right-panel>
