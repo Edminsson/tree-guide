@@ -1,5 +1,60 @@
+// The page fills the viewport: header, headings and tab bar take their natural height and the
+// active tab gets the rest. The tab body is the scroll container for the right column, while
+// .left sticks to its top and is exactly as tall as it, so the search box and the tree always
+// stay fully visible. The tree scrolls on its own. Everything follows window resizes.
+:host {
+    display: flex;
+    flex-direction: column;
+    height: 100dvh;
+    overflow: hidden;
+}
+
+app-header,
+h1,
+h2 {
+    flex: none;
+}
+
+mat-tab-group {
+    flex: 1;
+    min-height: 0;
+}
+
+// Material's tab internals: let the body fill the group, and make the scrolling content a size
+// container so .left can use its height (100cqh).
+:host ::ng-deep {
+    .mat-mdc-tab-body-wrapper {
+        flex: 1;
+        min-height: 0;
+    }
+
+    .mat-mdc-tab-body-content {
+        container-type: size;
+    }
+}
+
 .container {
     display: grid;
     grid-template-columns: 500px 1fr;
+    align-items: start;
     gap: 20px;
+}
+
+.left {
+    position: sticky;
+    top: 0;
+    height: 100cqh;
+    display: flex;
+    flex-direction: column;
+}
+
+app-tree-search {
+    flex: none;
+}
+
+app-tree-custom {
+    display: block;
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
 }
