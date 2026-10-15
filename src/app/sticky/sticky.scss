@@ -1,38 +1,7 @@
-// The page fills the viewport: header, headings and tab bar take their natural height and the
-// active tab gets the rest. The tab body is the scroll container for the right column, while
-// .left sticks to its top and is exactly as tall as it, so the search box and the tree always
-// stay fully visible. The tree scrolls on its own. Everything follows window resizes.
-:host {
-    display: flex;
-    flex-direction: column;
-    height: 100dvh;
-    overflow: hidden;
-}
-
-app-header,
-h1,
-h2 {
-    flex: none;
-}
-
-mat-tab-group {
-    flex: 1;
-    min-height: 0;
-}
-
-// Material's tab internals: let the body fill the group, and make the scrolling content a size
-// container so .left can use its height (100cqh).
-:host ::ng-deep {
-    .mat-mdc-tab-body-wrapper {
-        flex: 1;
-        min-height: 0;
-    }
-
-    .mat-mdc-tab-body-content {
-        container-type: size;
-    }
-}
-
+// The page scrolls as a whole, so the header, headings and tab bar scroll out of sight and the
+// right panel can use the full height. .left sticks to the top of the viewport; its height is set
+// from the component (see Sticky.updateLeftHeight) so the search box and tree always fit inside
+// the visible part of the viewport. The tree scrolls on its own.
 .container {
     display: grid;
     grid-template-columns: 500px 1fr;
@@ -40,10 +9,23 @@ mat-tab-group {
     gap: 20px;
 }
 
+// Material's tab body wraps the content in elements with overflow hidden/auto, which would become
+// the scroll container for position: sticky. overflow: clip/visible does not create one, so the
+// sticky element follows the page scroll instead.
+:host ::ng-deep {
+    .mat-mdc-tab-body-wrapper {
+        overflow: clip;
+    }
+
+    .mat-mdc-tab-body.mat-mdc-tab-body-active,
+    .mat-mdc-tab-body-active > .mat-mdc-tab-body-content {
+        overflow: visible;
+    }
+}
+
 .left {
     position: sticky;
     top: 0;
-    height: 100cqh;
     display: flex;
     flex-direction: column;
 }

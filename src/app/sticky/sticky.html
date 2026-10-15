@@ -5,7 +5,7 @@
 <mat-tab-group>
   <mat-tab label="First">
     <div class="container">
-      <div class="left">
+      <div class="left" #left [style.height.px]="leftHeight()">
         <app-tree-search [tree]="tree"></app-tree-search>
         <app-tree-custom #tree></app-tree-custom>
       </div>
