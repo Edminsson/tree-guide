@@ -1,33 +1,40 @@
-// The page scrolls as a whole, so the header, headings and tab bar scroll out of sight and the
-// right panel can use the full height. .left sticks to the top of the viewport; its height is set
-// from the component (see Sticky.updateLeftHeight) so the search box and tree always fit inside
-// the visible part of the viewport. The tree scrolls on its own.
-.container {
-    display: grid;
-    grid-template-columns: 500px 1fr;
-    align-items: start;
-    gap: 20px;
-}
-
-// Material's tab body wraps the content in elements with overflow hidden/auto, which would become
-// the scroll container for position: sticky. overflow: clip/visible does not create one, so the
-// sticky element follows the page scroll instead.
-:host ::ng-deep {
-    .mat-mdc-tab-body-wrapper {
-        overflow: clip;
-    }
-
-    .mat-mdc-tab-body.mat-mdc-tab-body-active,
-    .mat-mdc-tab-body-active > .mat-mdc-tab-body-content {
-        overflow: visible;
-    }
-}
-
-.left {
-    position: sticky;
-    top: 0;
+// The page fills the viewport: header and toolbar take their natural height and the sidenav
+// container gets the rest. The sidenav holds the search box and the tree and is always exactly as
+// tall as the container, so both stay fully visible; the tree scrolls on its own. The main content
+// (headings, tabs, right panel) scrolls inside mat-sidenav-content. Everything follows window
+// resizes.
+:host {
     display: flex;
     flex-direction: column;
+    height: 100dvh;
+}
+
+app-header,
+.toolbar {
+    flex: none;
+}
+
+.toolbar {
+    padding: 4px 8px;
+    border-bottom: 1px solid var(--mat-sys-outline-variant);
+}
+
+mat-sidenav-container {
+    flex: 1;
+    min-height: 0;
+}
+
+mat-sidenav {
+    width: 400px;
+}
+
+// mat-sidenav's inner container is 100% tall, so this fills the sidenav.
+.side {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
+    padding: 8px 8px 0;
 }
 
 app-tree-search {
@@ -39,4 +46,8 @@ app-tree-custom {
     flex: 1;
     min-height: 0;
     overflow-y: auto;
+}
+
+mat-sidenav-content {
+    padding: 0 16px;
 }
