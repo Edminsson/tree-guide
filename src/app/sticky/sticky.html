@@ -1,12 +1,3 @@
-<app-header></app-header>
-<div class="toolbar">
-  <button matIconButton (click)="sidenav.toggle()"
-          [attr.aria-label]="sidenav.opened ? 'Hide tree' : 'Show tree'"
-          [attr.aria-expanded]="sidenav.opened" aria-controls="tree-sidenav">
-    <mat-icon>{{ sidenav.opened ? 'menu_open' : 'menu' }}</mat-icon>
-  </button>
-</div>
-
 <mat-sidenav-container>
   <mat-sidenav #sidenav id="tree-sidenav" mode="side" opened>
     <div class="side">
@@ -16,15 +7,26 @@
   </mat-sidenav>
 
   <mat-sidenav-content>
-    <h1>Sticky</h1>
-    <h2>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Possimus atque corrupti temporibus et quaerat cumque dicta aperiam placeat ab, eaque dolore voluptas quae labore, eligendi fugit quam, ipsam deleniti provident iusto autem sequi maxime. Cupiditate amet nulla quisquam. Enim, sed atque. Itaque cumque ratione maiores explicabo nulla quaerat perspiciatis corporis.</h2>
+    <app-header></app-header>
+    <div class="toolbar">
+      <button matIconButton (click)="sidenav.toggle()"
+              [attr.aria-label]="sidenav.opened ? 'Hide tree' : 'Show tree'"
+              [attr.aria-expanded]="sidenav.opened" aria-controls="tree-sidenav">
+        <mat-icon>{{ sidenav.opened ? 'menu_open' : 'menu' }}</mat-icon>
+      </button>
+    </div>
 
-    <mat-tab-group>
-      <mat-tab label="First">
-        <app-right-panel></app-right-panel>
-      </mat-tab>
-      <mat-tab label="Second"> Content 2 </mat-tab>
-      <mat-tab label="Third"> Content 3 </mat-tab>
-    </mat-tab-group>
+    <div class="main">
+      <h1>Sticky</h1>
+      <h2>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Possimus atque corrupti temporibus et quaerat cumque dicta aperiam placeat ab, eaque dolore voluptas quae labore, eligendi fugit quam, ipsam deleniti provident iusto autem sequi maxime. Cupiditate amet nulla quisquam. Enim, sed atque. Itaque cumque ratione maiores explicabo nulla quaerat perspiciatis corporis.</h2>
+
+      <mat-tab-group>
+        <mat-tab label="First">
+          <app-right-panel></app-right-panel>
+        </mat-tab>
+        <mat-tab label="Second"> Content 2 </mat-tab>
+        <mat-tab label="Third"> Content 3 </mat-tab>
+      </mat-tab-group>
+    </div>
   </mat-sidenav-content>
 </mat-sidenav-container>

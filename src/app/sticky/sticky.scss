@@ -1,17 +1,10 @@
-// The page fills the viewport: header and toolbar take their natural height and the sidenav
-// container gets the rest. The sidenav holds the search box and the tree and is always exactly as
-// tall as the container, so both stay fully visible; the tree scrolls on its own. The main content
-// (headings, tabs, right panel) scrolls inside mat-sidenav-content. Everything follows window
-// resizes.
+// The page fills the viewport. The sidenav is a full-height column holding the search box and the
+// tree, so both stay fully visible; the tree takes the remaining height and scrolls on its own.
+// The header, toolbar, headings and tabs live in mat-sidenav-content, which scrolls as one, so the
+// header scrolls out of sight while the sidenav stays put. Everything follows window resizes.
 :host {
-    display: flex;
-    flex-direction: column;
+    display: block;
     height: 100dvh;
-}
-
-app-header,
-.toolbar {
-    flex: none;
 }
 
 .toolbar {
@@ -20,8 +13,7 @@ app-header,
 }
 
 mat-sidenav-container {
-    flex: 1;
-    min-height: 0;
+    height: 100%;
 }
 
 mat-sidenav {
@@ -48,6 +40,6 @@ app-tree-custom {
     overflow-y: auto;
 }
 
-mat-sidenav-content {
+.main {
     padding: 0 16px;
 }
